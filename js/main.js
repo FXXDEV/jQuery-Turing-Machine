@@ -37,86 +37,162 @@
         let tapeIndex = 0;
         let currentState = initialState;
         
+        console.log(tape);
+        console.log(initialState);
+        console.log(blankSymbol);
+        console.log(finalState);
+        
         
         for(let i=0; i < tape.length; i++){
           if(!alphabetSet.includes(tape[i])){
-           //swal("Erro",tape[i]+" não se encontra no alfabeto informado","error");
+           let phrase = tape[i]+" não pertence aos alfabeto";
+           Swal.fire({
+               position: 'center',
+               type: 'error',
+               title: 'Erro',
+               text: phrase,
+               showConfirmButton: false,
+               timer: 2500
+           })
             flag = 1;
           }
         }
     
-        for(let i=0; i < finalState.length; i++){
-          if(!states.includes(finalState[i])){
-           //swal("Erro",finalState[i]+" não se encontra nos states informados","error");
+        for(let i=0; i < tape.length; i++){
+          if(!states.includes(finalState)){
+            let phrase = finalState+" não pertence aos estados";
+            Swal.fire({
+                position: 'center',
+                type: 'error',
+                title: 'Erro',
+                text: phrase,
+                showConfirmButton: false,
+                timer: 2500
+            })
             flag = 1;
           }
         }
     
         if(!states.includes(initialState)){
-           //swal("Erro",initialState+" não se encontra nos estados informados","error");
+           
+           let phrase = initialState+" não pertence aos estados";
+            Swal.fire({
+                position: 'center',
+                type: 'error',
+                title: 'Erro',
+                text: phrase,
+                showConfirmButton: false,
+                timer: 2500
+            })
             flag = 1;
           }
-          if(initialState == "" && finalState == ""){
-              //swal("Erro",initialState + "verifique os campos de estado inicial e estados finais","warning");
-              flag = 1;
-            }
-    
-            
-            var TableData = new Array();
-    
-            $('#modifyTable tr').each(function(row, tr){
-                TableData[row]={
-                    "transition" : $(tr).find('td:eq(0)').text()
-                    , "currentState" :$(tr).find('td:eq(1) input').val()
-                    , "nextState" : $(tr).find('td:eq(2) input').val()
-                    , "scanSymbol" : $(tr).find('td:eq(3) input').val()
-                    , "printSymbol" : $(tr).find('td:eq(4) input').val()
-                    , "direction" : $(tr).find('td:eq(5) input').val()
-                }
-            }); 
-            TableData.shift();  // first row is the table header - so remove
 
-        
+        if(initialState == "" && finalState == ""){
+            let phrase = "Verifique os campos de estado inicial e estados finais ";
+            Swal.fire({
+                position: 'center',
+                type: 'warning',
+                title: 'Atencão!',
+                text: phrase,
+                showConfirmButton: false,
+                timer: 2500
+            })
+            flag = 1;
+        }
+      
+    $('#modifyTable tr').each(function(row, tr){
+        transitions[row]={
+        "transition" : $(tr).find('td:eq(0)').text()
+        , "currentState" :$(tr).find('td:eq(1) input').val()
+        , "nextState" : $(tr).find('td:eq(2) input').val()
+        , "scanSymbol" : $(tr).find('td:eq(3) input').val()
+        , "printSymbol" : $(tr).find('td:eq(4) input').val()
+        , "direction" : $(tr).find('td:eq(5) input').val()
+        }
+    }); 
+    transitions.shift(); 
+            
           for(let i=0; i < transitions.length; i++){
-            let currentState = transitions[i].split('/');
-            let currentState2 = currentState[0].split(",");
-            if((currentState2[0] === currentState) && (currentState2[1] === tape[tapeIndex])){
-             let verif = currentState[1].split(",");
-             if(!states.includes(verif[0])){
-                //swal("Erro",verif[0]+" não se  encontra nos estados informados","error");
-               flag = 1;
-               break;
-             }
-             if(!alphabetSet.includes(verif[1])){
-               //swal("Erro",verif[1]+" não se  encontra no alfabeto informado","error");
-              flag = 1;
-              break;
+            let verify = transitions[i].currentState;
+            if(transitions[i].currentState == currentState && transitions[i].scanSymbol == tape[tapeIndex]){
+                if(!states.includes(transitions[i].nextState)){
+                    let phrase = verify[0]+" não se encontra nos estados";
+                    Swal.fire({
+                        position: 'center',
+                        type: 'warning',
+                        title: 'Atencão!',
+                        text: phrase,
+                        showConfirmButton: false,
+                        timer: 2500
+                    })
+                    flag = 1;
+                    break;
+                }
             }
-              currentState = verif[0];
-              tape[tapeIndex] = verif[1];
-              if(currentState[2] === 'r' || currentState[2] === 'R'){
+           
+            if(!alphabetSet.includes(transitions[i].printSymbol)){
+                let phrase = verify[1]+" não se encontra no alfabeto";
+                Swal.fire({
+                    position: 'center',
+                    type: 'warning',
+                    title: 'Atencão!',
+                    text: phrase,
+                    showConfirmButton: false,
+                    timer: 2500
+                })
+                flag = 1;
+                break;
+              }
+              currentState = transitions[i].nextState;
+              tape[tapeIndex] = transitions[i].printSymbol;
+
+              if(transitions[i].direction == 'r' || transitions[i].direction  == 'R'){
                 if(tapeIndex==tape.length-1){
-                  tape.push(blankSymbol)
+                  tape.push(blankSymbol);
                 }
                 tapeIndex++;
-              }else if(currentState[2] === 'l' || currentState[2] === 'L'){
+              }else if(transitions[i].direction == 'l' || transitions[i].direction == 'L'){
                 tapeIndex--;
                 if(tape[tapeIndex]===undefined){
                   tape.unshift(blankSymbol);
                   tapeIndex=0;
                 }
-              }else if(currentState[2] != 's' && !currentState[2] != 'S'){
-                //swal("Erro", currentState[2] + " é inválido","error");
-                flag = 1;
-              }
-              i=-1;
-            }
+              }else if(transitions[i].direction !== 's' && !transitions[i].direction!= 'S'){
+                let phrase = transitions.direction+" é invalido";
+                Swal.fire({
+                    position: 'center',
+                    type: 'danger',
+                    title: 'Atencão!',
+                    text: phrase,
+                    showConfirmButton: false,
+                    timer: 2500
+                })
+                  flag = 1;
+             } 
+             i=-1;
           }
           if(flag == 0){
             if(finalState.includes(currentState)) {
-             // swal("Sucesso!","a tape ficou "+ tape,"success");
+                let phrase = "A fita ficou "+ tape;
+                Swal.fire({
+                    position: 'center',
+                    type: 'success',
+                    title: 'Sucesso!',
+                    text: phrase,
+                    showConfirmButton: true,
+                    
+                }) 
+            
             }else{
-              //swal("Erro","Algo deu errado","error");
+                let phrase = "A fita ficou "+ tape;
+                Swal.fire({
+                    position: 'center',
+                    type: 'error',
+                    title: 'Erro!',
+                    text: 'Algo deu errado',
+                    showConfirmButton: true,
+                    
+                }) 
             }
           }
     }
