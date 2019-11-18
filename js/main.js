@@ -37,12 +37,6 @@
         let tapeIndex = 0;
         let currentState = initialState;
         
-        console.log(tape);
-        console.log(initialState);
-        console.log(blankSymbol);
-        console.log(finalState);
-        
-        
         for(let i=0; i < tape.length; i++){
           if(!alphabetSet.includes(tape[i])){
            let phrase = tape[i]+" não pertence aos alfabeto";
@@ -176,6 +170,7 @@
           if(flag == 0){
             if(finalState.includes(currentState)) {
                 let phrase = "A fita ficou "+ tape;
+                $('#outputString').val(tape);
                 Swal.fire({
                     position: 'center',
                     type: 'success',
