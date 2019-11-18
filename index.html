@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    
+    <title>Turing Machine</title>
+   
+  </head>
+  <nav class="text-left justify-content-center pt-2 pl-4 bg-dark">
+        <div class="row">
+            <div class="col text-center align-center justify-content-center">
+                <h1 class="text-info text-uppercase font-italic ">Turing Machine</h1>
+            </div>
+        </div>
+      
+    </nav>
+  <body class="bg-dark">
+
+     <div class="container">
+        <div class="col">
+            <div class="col bg-secondary mt-4">
+
+                        <div class="mt-4">
+                        <h4 class="text-center text-white text-uppercase pt-4 text-default font-italic">Definição de Linguagem</h4>
+                         <form id="laguangeForm">
+                            <div class="text-center row pull-center mt-4">
+                                <input placeholder="Q" title="Estados"class="form-control text-center col-md-2 mr-2 ml-4"  disabled/>
+                                <input type="text" id="statesSet" placeholder="Q0, Q1..." class="form-control upper text-center col mr-4" />
+                            </div>
+
+                            <div class="text-center row pull-center mt-4">
+                                <input  title="Alfabeto" placeholder="&Gamma;" class="form-control text-center col-md-2 mr-2 ml-4"  disabled/>
+                                <input type="text" id="alphabetSet" placeholder="0, 1..." class="form-control upper text-center col mr-4" />
+                            </div>
+
+                            <div class="text-center row pull-center mt-4">
+                                <input  title="Simbolo Vazio" placeholder="b" class="form-control text-center col-md-2 mr-2 ml-4"  disabled/>
+                                <input id="blankSymbol" placeholder="0" class="form-control upper text-center col mr-4" />
+                            </div>
+
+                            <!-- <div class="text-center row pull-center mt-4">
+                                <input  title="Alfabeto da Fita" placeholder="&sum;" class="form-control text-center col-md-2 mr-2 ml-4"  disabled/>
+                                <input id="inputSymbols" placeholder="0,1" class="form-control upper text-center col mr-4" />
+                            </div> -->
+
+                            <div class="text-center row pull-center mt-4">
+                                <input  title="Estado Inicial" placeholder="q0" class="form-control text-center col-md-2 mr-2 ml-4"  disabled/>
+                                <input  id="initialState" placeholder="q0" class="form-control upper text-center col mr-4" />
+                            </div>
+
+                            <div class="text-center row pull-center mt-4">
+                                <input  title="Estado Final" placeholder="F" class="form-control text-center col-md-2 mr-2 ml-4"  disabled/>
+                                <input id="finalState" placeholder="Q1" class="form-control upper text-center col mr-4" />
+                            </div>
+                            
+                            
+                            <div class="row">
+                                <button type="button"  onClick="clearLaguange();" class="btn mx-4 my-4 text-uppercase btn-danger col">LIMPAR</button>
+                            </div>
+                            
+                            
+                        </form>
+                        </div>
+                </div>
+        </div>
+
+
+        <div class="col">
+               <div class=" pb-4 mt-4 bg-secondary">
+            <h4 class="text-center pt-4 text-white text-uppercase font-italic ">Definição de Estados</h4>
+                <form>
+
+                <div class="col">
+                    <table class="table table-responsive table-default" id="modifyTable">
+                        <thead>
+                            <tr class="text-center text-white text-uppercase transitions">
+                                <th>#</th>
+                                <th>Estado Atual</th> 
+                                <th>Próximo Estado</th> 
+                                <th>Ler Simbolo</th>
+                                <th>Escrever Simbolo</th>
+                                <th>Direção Fita</th>
+                                <th class="" title="Adicionar estado">
+                                    <button valign="middle" type="button" class="btn btn-primary  btn-xl text-center" onClick="cloneRow();" >
+                                        <span class="fa fa-plus text-white"></span>
+                                    </button>                    
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center text-white" id="rowToClone">
+                            <tr class="text-center">
+                            <td>1</td>
+                            <td>
+                                <input type="text" title="Estado atual "class="form-control" name="currentState"></input>
+                            </td>
+                            <td>
+                                <input type="text" title="Próximo estado "class="form-control input-sm" name="nextState"></input>
+                            </td>
+
+                            <td>
+                                <input type="text" title="Ler simbolo"class="form-control input-sm" name="scanSymbol"></input>
+                            </td>
+                            <td>
+                                <input type="text" title="Escrever simbolo"class="form-control input-sm" name="printSymbol"></input>
+                            </td>
+                            <td>
+                                <input type="text" title="L/R" class="form-control input-sm" name="direction"></input>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </form>
+        </div>
+        </div>
+
+        <div class="col">
+              <div class="mt-4 bg-secondary pt-2">
+            <div class="row text-center ml-4">
+                <h5 class="text-center text-uppercase text-white">Entrada</h5>
+            </div>
+      
+            <div class="row pb-4">
+                <div class="col ml-4">       
+                    <input class="form-control" id="inputString" placeholder="Insira a fita inicial"></input>               
+                </div>
+                
+
+                <div class="col btn-group mr-4 " id="actionButtons" >
+                    <button type="button" class="btn btn-success  text-center col text-black"  onClick="run();">
+                        <span class="fa fa-play-circle text-white"></span> Executar
+                    </button>  
+                </div> 
+            </div>
+       
+        </div>
+        </div>
+
+        <div class="col">
+            <div class="mt-4 pb-4 bg-secondary pt-2">
+                <div class="row text-center ml-4">
+                    <h5 class="text-center text-uppercase text-white">SAIDA</h5>  
+                </div>
+                <div class="col">       
+                    <input class="form-control" id="outputString" disabled></input>               
+                </div>
+                  
+                    
+            </div>
+        </div>
+        
+     
+       
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"  type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script src="https://use.fontawesome.com/02aa2317d4.js"></script>
+    <script  type="text/javascript" src="./js/main.js"></script>
+  </body>
+</html>
