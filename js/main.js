@@ -111,12 +111,12 @@
         }
     }); 
     transitions.shift(); 
-            
-          for(let i=0; i < transitions.length; i++){
-            let verify = transitions[i].currentState;
+
+
+        for(let i=0; i < transitions.length; i++){
             if(transitions[i].currentState == currentState && transitions[i].scanSymbol == tape[tapeIndex]){
                 if(!states.includes(transitions[i].nextState)){
-                    let phrase = verify[0]+" não se encontra nos estados";
+                    let phrase = transitions[i].nextState +" não se encontra nos estados";
                     Swal.fire({
                         position: 'center',
                         type: 'warning',
@@ -128,49 +128,51 @@
                     flag = 1;
                     break;
                 }
-            }
-           
-            if(!alphabetSet.includes(transitions[i].printSymbol)){
-                let phrase = verify[1]+" não se encontra no alfabeto";
-                Swal.fire({
-                    position: 'center',
-                    type: 'warning',
-                    title: 'Atencão!',
-                    text: phrase,
-                    showConfirmButton: false,
-                    timer: 2500
-                })
-                flag = 1;
-                break;
-              }
-              currentState = transitions[i].nextState;
-              tape[tapeIndex] = transitions[i].printSymbol;
 
-              if(transitions[i].direction == 'r' || transitions[i].direction  == 'R'){
-                if(tapeIndex==tape.length-1){
-                  tape.push(blankSymbol);
+                if(!alphabetSet.includes(transitions[i].printSymbol)){
+                    let phrase = transitions[i].printSymbol +" não se encontra no alfabeto";
+                    Swal.fire({
+                        position: 'center',
+                        type: 'warning',
+                        title: 'Atencão!',
+                        text: phrase,
+                        showConfirmButton: false,
+                        timer: 2500
+                    })
+                    flag = 1;
+                    break;
                 }
-                tapeIndex++;
-              }else if(transitions[i].direction == 'l' || transitions[i].direction == 'L'){
-                tapeIndex--;
-                if(tape[tapeIndex]===undefined){
-                  tape.unshift(blankSymbol);
-                  tapeIndex=0;
+                currentState = transitions[i].nextState;
+                tape[tapeIndex] = transitions[i].printSymbol;
+
+                if(transitions[i].direction.toUpperCase() == 'R'){
+                    if(tapeIndex == tape.length-1){
+                        tape.push(blankSymbol);
+                    }
+                    tapeIndex++;
+                }else if(transitions[i].direction.toUpperCase() == 'L'){
+                    tapeIndex--;
+                    if(tape[tapeIndex]==undefined){
+                        tape.unshift(blankSymbol);
+                        tapeIndex = 0;
+                    }
+                }else if(!transitions[i].direction.toUpperCase() == 'S'){
+                    let phrase = transitions[i].direction +" é inválido";
+                    Swal.fire({
+                        position: 'center',
+                        type: 'error',
+                        title: 'Erro!',
+                        text: phrase,
+                        showConfirmButton: false,
+                        timer: 2500
+                    })
+                    flag = 1;
                 }
-              }else if(transitions[i].direction !== 's' && !transitions[i].direction!= 'S'){
-                let phrase = transitions.direction+" é invalido";
-                Swal.fire({
-                    position: 'center',
-                    type: 'danger',
-                    title: 'Atencão!',
-                    text: phrase,
-                    showConfirmButton: false,
-                    timer: 2500
-                })
-                  flag = 1;
-             } 
-             i=-1;
-          }
+                i= -1;
+            }
+        }
+            
+         
           if(flag == 0){
             if(finalState.includes(currentState)) {
                 let phrase = "A fita ficou "+ tape;
@@ -184,7 +186,6 @@
                 }) 
             
             }else{
-                let phrase = "A fita ficou "+ tape;
                 Swal.fire({
                     position: 'center',
                     type: 'error',
